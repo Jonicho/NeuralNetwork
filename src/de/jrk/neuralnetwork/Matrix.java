@@ -50,7 +50,7 @@ public class Matrix {
 
 	public static Matrix add(Matrix m1, Matrix m2) {
 		if (m1.getRows() != m2.getRows() || m1.getCols() != m2.getCols()) {
-			throw new IllegalArgumentException("The size of Matrix 1 does not match the size of Matrrix 2!");
+			throw new IllegalArgumentException("The size of Matrix 1 does not match the size of Matrix 2!");
 		}
 		Matrix result = new Matrix(m1.getRows(), m1.getCols());
 		for (int i = 0; i < result.getRows(); i++) {
@@ -63,7 +63,7 @@ public class Matrix {
 
 	public static Matrix subtract(Matrix m1, Matrix m2) {
 		if (m1.getRows() != m2.getRows() || m1.getCols() != m2.getCols()) {
-			throw new IllegalArgumentException("The size of Matrix 1 does not match the size of Matrrix 2!");
+			throw new IllegalArgumentException("The size of Matrix 1 does not match the size of Matrix 2!");
 		}
 		Matrix result = new Matrix(m1.getRows(), m1.getCols());
 		for (int i = 0; i < result.getRows(); i++) {
