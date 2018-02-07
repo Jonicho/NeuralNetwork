@@ -1,10 +1,12 @@
 package de.jrk.neuralnetwork;
 
+import de.jrk.neuralnetwork.training.BackpropagationTrainer;
+
 public class Test {
 	public static void main(String[] args) {
 		NeuralNetwork nn = new NeuralNetwork(3, 4, 3);
 		nn.randomize();
-		NeuralNetworkTrainer nnt = new NeuralNetworkTrainer(nn);
+		BackpropagationTrainer bpt = new BackpropagationTrainer(nn);
 		Matrix[][] trainingData = { { Matrix.from2DArray(0, 0, 0), Matrix.from2DArray(0, 0, 1) },
 				{ Matrix.from2DArray(0, 0, 1), Matrix.from2DArray(0, 1, 0) },
 				{ Matrix.from2DArray(0, 1, 0), Matrix.from2DArray(0, 1, 1) },
@@ -14,22 +16,28 @@ public class Test {
 				{ Matrix.from2DArray(1, 1, 0), Matrix.from2DArray(1, 1, 1) },
 				{ Matrix.from2DArray(1, 1, 1), Matrix.from2DArray(0, 0, 0) }, };
 
-		double learningRate = 0.5;
-		double loss = 0;
+		for (int i = 0; i < trainingData.length; i++) {
+			if (Math.random() > 0.1) {
+				bpt.addTrainingData(trainingData[i]);
+			} else {
+				bpt.addValidationData(trainingData[i]);
+			}
+		}
+		bpt.setLearningRate(0.1);
 		for (int i = 0; i < 1000000; i++) {
 			for (int j = 0; j < trainingData.length; j++) {
-				loss += nnt.train(trainingData[j][0], trainingData[j][1], learningRate);
+				bpt.train();
 			}
-			loss /= trainingData.length;
 			if (i % 1000 == 0) {
-				System.out.println("Iteration " + i + "; Loss: " + loss);
+				System.out.println(
+						"Iteration " + i + "; Loss: " + bpt.getLoss() + "; V. loss: " + bpt.getValidationLoss());
 			}
-			if (loss < 0.001) {
+			if (bpt.getLoss() < 0.001) {
 				System.out.println("Last iteration: " + i);
 				break;
 			}
 		}
-		System.out.println("Final loss: " + loss);
+		System.out.println("Final loss: " + bpt.getLoss() + " Final V. loss: " + bpt.getValidationLoss());
 		for (int k = 0; k < trainingData.length; k++) {
 			Matrix m = Matrix.transpose(nn.feedfoward(trainingData[k][0]));
 
