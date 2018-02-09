@@ -18,22 +18,21 @@ public class BackpropagationTrainer {
 		for (Matrix[] data : trainingData) {
 			Matrix[] errors = new Matrix[nn.getWeights().length];
 			Matrix outputs = nn.feedfoward(data[0]);
-			Matrix outputErrors = Matrix.subtract(data[1], outputs);
+			Matrix outputErrors = data[1].subtract(outputs);
 			errors[errors.length - 1] = outputErrors;
 			for (int i = errors.length - 2; i >= 0; i--) {
-				errors[i] = Matrix.multiply(Matrix.transpose(nn.getWeights()[i + 1]), errors[i + 1]);
+				errors[i] = nn.getWeights()[i + 1].transpose().multiply(errors[i + 1]);
 			}
 			for (int w = 0; w < nn.getWeights().length; w++) {
-				Matrix delta = Matrix.scale(errors[w], learningRate);
-				delta = Matrix.multiplyEntrywise(delta, Matrix.multiplyEntrywise(nn.getActivations()[w],
-						Matrix.scale(Matrix.add(nn.getActivations()[w], -1), -1)));
+				Matrix delta = errors[w].scale(learningRate);
+				delta = delta.multiplyEntrywise(
+						nn.getActivations()[w].multiplyEntrywise(nn.getActivations()[w].add(-1).scale(-1)));
 
-				Matrix deltaWeights = Matrix.multiply(delta,
-						Matrix.transpose(w == 0 ? data[0] : nn.getActivations()[w - 1]));
-				nn.getWeights()[w] = Matrix.add(nn.getWeights()[w], deltaWeights);
+				Matrix deltaWeights = delta.multiply((w == 0 ? data[0] : nn.getActivations()[w - 1]).transpose());
+				nn.getWeights()[w] = nn.getWeights()[w].add(deltaWeights);
 
-				Matrix deltaBiases = Matrix.multiply(delta, Matrix.from2DArray(1));
-				nn.getBiases()[w] = Matrix.add(nn.getBiases()[w], deltaBiases);
+				Matrix deltaBiases = delta.multiply(Matrix.from2DArray(1));
+				nn.getBiases()[w] = nn.getBiases()[w].add(deltaBiases);
 			}
 			for (int i = 0; i < outputErrors.getRows(); i++) {
 				for (int j = 0; j < outputErrors.getCols(); j++) {
@@ -46,7 +45,7 @@ public class BackpropagationTrainer {
 		for (Matrix[] data : validationData) {
 			Matrix[] errors = new Matrix[nn.getWeights().length];
 			Matrix outputs = nn.feedfoward(data[0]);
-			Matrix outputErrors = Matrix.subtract(data[1], outputs);
+			Matrix outputErrors = data[1].subtract(outputs);
 			errors[errors.length - 1] = outputErrors;
 
 			for (int i = 0; i < outputErrors.getRows(); i++) {

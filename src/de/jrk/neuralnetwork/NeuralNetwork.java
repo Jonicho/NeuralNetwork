@@ -36,7 +36,7 @@ public class NeuralNetwork {
 
 	public Matrix feedfoward(Matrix inputs) {
 		for (int a = 0; a < activations.length; a++) {
-			Matrix output = Matrix.add(Matrix.multiply(weights[a], a == 0 ? inputs : activations[a - 1]), biases[a]);
+			Matrix output = weights[a].multiply(a == 0 ? inputs : activations[a - 1]).add(biases[a]);
 			for (int i = 0; i < output.getRows(); i++) {
 				for (int j = 0; j < output.getCols(); j++) {
 					output.set(i, j, sigmoid(output.get(i, j)));

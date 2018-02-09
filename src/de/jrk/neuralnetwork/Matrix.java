@@ -48,72 +48,72 @@ public class Matrix {
 		return Arrays.deepToString(data);
 	}
 
-	public static Matrix add(Matrix m1, Matrix m2) {
-		if (m1.getRows() != m2.getRows() || m1.getCols() != m2.getCols()) {
-			throw new IllegalArgumentException("The size of Matrix 1 does not match the size of Matrix 2!");
+	public Matrix add(Matrix m) {
+		if (getRows() != m.getRows() || getCols() != m.getCols()) {
+			throw new IllegalArgumentException("The size of this Matrix does not match the size of the given Matrix!");
 		}
-		Matrix result = new Matrix(m1.getRows(), m1.getCols());
+		Matrix result = new Matrix(getRows(), getCols());
 		for (int i = 0; i < result.getRows(); i++) {
 			for (int j = 0; j < result.getCols(); j++) {
-				result.set(i, j, m1.get(i, j) + m2.get(i, j));
+				result.set(i, j, get(i, j) + m.get(i, j));
 			}
 		}
 		return result;
 	}
 
-	public static Matrix subtract(Matrix m1, Matrix m2) {
-		if (m1.getRows() != m2.getRows() || m1.getCols() != m2.getCols()) {
-			throw new IllegalArgumentException("The size of Matrix 1 does not match the size of Matrix 2!");
+	public Matrix subtract(Matrix m) {
+		if (getRows() != m.getRows() || getCols() != m.getCols()) {
+			throw new IllegalArgumentException("The size of this Matrix does not match the size of the given Matrix!");
 		}
-		Matrix result = new Matrix(m1.getRows(), m1.getCols());
+		Matrix result = new Matrix(getRows(), getCols());
 		for (int i = 0; i < result.getRows(); i++) {
 			for (int j = 0; j < result.getCols(); j++) {
-				result.set(i, j, m1.get(i, j) - m2.get(i, j));
+				result.set(i, j, get(i, j) - m.get(i, j));
 			}
 		}
 		return result;
 	}
 
-	public static Matrix add(Matrix m, double x) {
-		Matrix result = new Matrix(m.getRows(), m.getCols());
+	public Matrix add(double x) {
+		Matrix result = new Matrix(getRows(), getCols());
 		for (int i = 0; i < result.getRows(); i++) {
 			for (int j = 0; j < result.getCols(); j++) {
-				result.set(i, j, m.get(i, j) + x);
+				result.set(i, j, get(i, j) + x);
 			}
 		}
 		return result;
 	}
 
-	public static Matrix scale(Matrix m, double scalar) {
-		Matrix result = new Matrix(m.getRows(), m.getCols());
+	public Matrix scale(double scalar) {
+		Matrix result = new Matrix(getRows(), getCols());
 		for (int i = 0; i < result.getRows(); i++) {
 			for (int j = 0; j < result.getCols(); j++) {
-				result.set(i, j, m.get(i, j) * scalar);
+				result.set(i, j, get(i, j) * scalar);
 			}
 		}
 		return result;
 	}
 
-	public static Matrix transpose(Matrix m) {
-		Matrix result = new Matrix(m.getCols(), m.getRows());
+	public Matrix transpose() {
+		Matrix result = new Matrix(getCols(), getRows());
 		for (int i = 0; i < result.getRows(); i++) {
 			for (int j = 0; j < result.getCols(); j++) {
-				result.set(i, j, m.get(j, i));
+				result.set(i, j, get(j, i));
 			}
 		}
 		return result;
 	}
 
-	public static Matrix multiply(Matrix m1, Matrix m2) {
-		if (m1.getCols() != m2.getRows()) {
-			throw new IllegalArgumentException("The columns of Matrix 1 do not match the rows of Matrrix 2!");
+	public Matrix multiply(Matrix m) {
+		if (getCols() != m.getRows()) {
+			throw new IllegalArgumentException("The columns of this Matrix do not match the rows of the given Matrix!");
 		}
-		Matrix result = new Matrix(m1.getRows(), m2.getCols());
+		Matrix result = new Matrix(getRows(), m.getCols());
 		for (int i = 0; i < result.getRows(); i++) {
 			for (int j = 0; j < result.getCols(); j++) {
 				double sum = 0;
-				for (int k = 0; k < m1.getCols(); k++) {
-					sum += m1.get(i, k) * m2.get(k, j);
+				for (int k = 0; k < getCols(); k++) {
+					sum += get(i, k) * m.get(k, j);
 				}
 				result.set(i, j, sum);
 			}
@@ -121,14 +121,14 @@ public class Matrix {
 		return result;
 	}
 
-	public static Matrix multiplyEntrywise(Matrix m1, Matrix m2) {
-		if (m1.getRows() != m2.getRows() || m1.getCols() != m2.getCols()) {
-			throw new IllegalArgumentException("The size of Matrix 1 does not match the size of Matrrix 2!");
+	public Matrix multiplyEntrywise(Matrix m) {
+		if (getRows() != m.getRows() || getCols() != m.getCols()) {
+			throw new IllegalArgumentException("The size of this Matrix does not match the size of the given Matrix!");
 		}
-		Matrix result = new Matrix(m1.getRows(), m1.getCols());
+		Matrix result = new Matrix(getRows(), getCols());
 		for (int i = 0; i < result.getRows(); i++) {
 			for (int j = 0; j < result.getCols(); j++) {
-				result.set(i, j, m1.get(i, j) * m2.get(i, j));
+				result.set(i, j, get(i, j) * m.get(i, j));
 			}
 		}
 		return result;

@@ -18,7 +18,7 @@ import de.jrk.neuralnetwork.training.BackpropagationTrainer;
 public class Trainer {
 	public static void main(String[] args) {
 		NeuralNetwork nn = null;
-		boolean newNetwork = false; // change this to false if you want to continue training;
+		boolean newNetwork = true; // change this to false if you want to continue training;
 									// change it to true to create a new network
 		if (newNetwork) {
 			nn = new NeuralNetwork(312, 20, 10, 2);
