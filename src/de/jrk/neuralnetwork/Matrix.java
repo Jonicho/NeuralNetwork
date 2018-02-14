@@ -16,10 +16,6 @@ public class Matrix {
 		return data[i][j];
 	}
 
-	public void set(int i, int j, double x) {
-		data[i][j] = x;
-	}
-
 	public int getRows() {
 		return data.length;
 	}
@@ -28,19 +24,73 @@ public class Matrix {
 		return data[0].length;
 	}
 
+	public Matrix add(Matrix m) {
+		if (getRows() != m.getRows() || getCols() != m.getCols()) {
+			throw new IllegalArgumentException("The size of this Matrix does not match the size of the given Matrix!");
+		}
+		return map((x, i, j) -> x + m.get(i, j));
+	}
+
+	public Matrix subtract(Matrix m) {
+		if (getRows() != m.getRows() || getCols() != m.getCols()) {
+			throw new IllegalArgumentException("The size of this Matrix does not match the size of the given Matrix!");
+		}
+		return map((x, i, j) -> x - m.get(i, j));
+	}
+
+	public Matrix add(double addend) {
+		return map((x, i, j) -> x + addend);
+	}
+
+	public Matrix scale(double scalar) {
+		return map((x, i, j) -> x * scalar);
+	}
+
+	public Matrix transpose() {
+		return new Matrix(getCols(), getRows()).map((x, i, j) -> get(j, i));
+	}
+
+	public Matrix multiply(Matrix m) {
+		if (getCols() != m.getRows()) {
+			throw new IllegalArgumentException("The columns of this Matrix do not match the rows of the given Matrix!");
+		}
+		return new Matrix(getRows(), m.getCols()).map((x, i, j) -> {
+			double sum = 0;
+			for (int k = 0; k < getCols(); k++) {
+				sum += get(i, k) * m.get(k, j);
+			}
+			return sum;
+		});
+	}
+
+	public Matrix multiplyEntrywise(Matrix m) {
+		if (getRows() != m.getRows() || getCols() != m.getCols()) {
+			throw new IllegalArgumentException("The size of this Matrix does not match the size of the given Matrix!");
+		}
+		return map((x, i, j) -> x * m.get(i, j));
+	}
+
+	public Matrix map(MapFunction function) {
+		Matrix result = new Matrix(getRows(), getCols());
+		for (int i = 0; i < result.getRows(); i++) {
+			for (int j = 0; j < result.getCols(); j++) {
+				result.data[i][j] = function.function(get(i, j), i, j);
+			}
+		}
+		return result;
+	}
+
+	public interface MapFunction {
+		double function(double x, int i, int j);
+	}
+
 	public Matrix getCopy() {
 		return (Matrix) clone();
 	}
 
 	@Override
 	protected Object clone() {
-		Matrix result = new Matrix(getRows(), getCols());
-		for (int i = 0; i < getRows(); i++) {
-			for (int j = 0; j < getCols(); j++) {
-				result.set(i, j, get(i, j));
-			}
-		}
-		return result;
+		return map((x, i, j) -> x);
 	}
 
 	@Override
@@ -48,98 +98,8 @@ public class Matrix {
 		return Arrays.deepToString(data);
 	}
 
-	public Matrix add(Matrix m) {
-		if (getRows() != m.getRows() || getCols() != m.getCols()) {
-			throw new IllegalArgumentException("The size of this Matrix does not match the size of the given Matrix!");
-		}
-		Matrix result = new Matrix(getRows(), getCols());
-		for (int i = 0; i < result.getRows(); i++) {
-			for (int j = 0; j < result.getCols(); j++) {
-				result.set(i, j, get(i, j) + m.get(i, j));
-			}
-		}
-		return result;
-	}
-
-	public Matrix subtract(Matrix m) {
-		if (getRows() != m.getRows() || getCols() != m.getCols()) {
-			throw new IllegalArgumentException("The size of this Matrix does not match the size of the given Matrix!");
-		}
-		Matrix result = new Matrix(getRows(), getCols());
-		for (int i = 0; i < result.getRows(); i++) {
-			for (int j = 0; j < result.getCols(); j++) {
-				result.set(i, j, get(i, j) - m.get(i, j));
-			}
-		}
-		return result;
-	}
-
-	public Matrix add(double x) {
-		Matrix result = new Matrix(getRows(), getCols());
-		for (int i = 0; i < result.getRows(); i++) {
-			for (int j = 0; j < result.getCols(); j++) {
-				result.set(i, j, get(i, j) + x);
-			}
-		}
-		return result;
-	}
-
-	public Matrix scale(double scalar) {
-		Matrix result = new Matrix(getRows(), getCols());
-		for (int i = 0; i < result.getRows(); i++) {
-			for (int j = 0; j < result.getCols(); j++) {
-				result.set(i, j, get(i, j) * scalar);
-			}
-		}
-		return result;
-	}
-
-	public Matrix transpose() {
-		Matrix result = new Matrix(getCols(), getRows());
-		for (int i = 0; i < result.getRows(); i++) {
-			for (int j = 0; j < result.getCols(); j++) {
-				result.set(i, j, get(j, i));
-			}
-		}
-		return result;
-	}
-
-	public Matrix multiply(Matrix m) {
-		if (getCols() != m.getRows()) {
-			throw new IllegalArgumentException("The columns of this Matrix do not match the rows of the given Matrix!");
-		}
-		Matrix result = new Matrix(getRows(), m.getCols());
-		for (int i = 0; i < result.getRows(); i++) {
-			for (int j = 0; j < result.getCols(); j++) {
-				double sum = 0;
-				for (int k = 0; k < getCols(); k++) {
-					sum += get(i, k) * m.get(k, j);
-				}
-				result.set(i, j, sum);
-			}
-		}
-		return result;
-	}
-
-	public Matrix multiplyEntrywise(Matrix m) {
-		if (getRows() != m.getRows() || getCols() != m.getCols()) {
-			throw new IllegalArgumentException("The size of this Matrix does not match the size of the given Matrix!");
-		}
-		Matrix result = new Matrix(getRows(), getCols());
-		for (int i = 0; i < result.getRows(); i++) {
-			for (int j = 0; j < result.getCols(); j++) {
-				result.set(i, j, get(i, j) * m.get(i, j));
-			}
-		}
-		return result;
-	}
-
 	public static Matrix from2DArray(double... array) {
-		Matrix result = new Matrix(array.length, 1);
-		for (int i = 0; i < array.length; i++) {
-			result.set(i, 0, array[i]);
-		}
-		return result;
+		return new Matrix(array.length, 1).map((x, i, j) -> array[i]);
 	}
 
 	public static Matrix fromString(String string) {
@@ -160,12 +120,6 @@ public class Matrix {
 			}
 			g.add(d);
 		}
-		Matrix result = new Matrix(g.size(), cols);
-		for (int i = 0; i < result.getRows(); i++) {
-			for (int j = 0; j < result.getCols(); j++) {
-				result.set(i, j, g.get(i)[j]);
-			}
-		}
-		return result;
+		return new Matrix(g.size(), cols).map((x, i, j) -> g.get(i)[j]);
 	}
 }

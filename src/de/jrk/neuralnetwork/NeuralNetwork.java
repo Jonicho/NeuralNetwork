@@ -20,29 +20,16 @@ public class NeuralNetwork {
 	}
 
 	public void randomize() {
-		for (int m = 0; m < weights.length; m++) {
-			for (int i = 0; i < weights[m].getRows(); i++) {
-				for (int j = 0; j < weights[m].getCols(); j++) {
-					weights[m].set(i, j, Math.random() * 2 - 1);
-				}
-			}
-		}
-		for (int b = 0; b < biases.length; b++) {
-			for (int i = 0; i < biases[b].getRows(); i++) {
-				biases[b].set(i, 0, Math.random() * 2 - 1);
-			}
+		for (int l = 0; l < weights.length; l++) {
+			weights[l] = weights[l].map((x, i, j) -> Math.random() * 2 - 1);
+			biases[l] = biases[l].map((x, i, j) -> Math.random() * 2 - 1);
 		}
 	}
 
 	public Matrix feedfoward(Matrix inputs) {
 		for (int a = 0; a < activations.length; a++) {
-			Matrix output = weights[a].multiply(a == 0 ? inputs : activations[a - 1]).add(biases[a]);
-			for (int i = 0; i < output.getRows(); i++) {
-				for (int j = 0; j < output.getCols(); j++) {
-					output.set(i, j, sigmoid(output.get(i, j)));
-				}
-			}
-			activations[a] = output;
+			activations[a] = weights[a].multiply(a == 0 ? inputs : activations[a - 1]).add(biases[a])
+					.map((x, i, j) -> sigmoid(x));
 		}
 		return activations[activations.length - 1].getCopy();
 	}
