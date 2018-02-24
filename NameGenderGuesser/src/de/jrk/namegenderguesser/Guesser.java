@@ -32,7 +32,7 @@ public class Guesser {
 			System.exit(0);
 		}
 
-		System.out.println(nn.feedfoward(getData(name)));
+		System.out.println(nn.feedforward(getData(name)));
 	}
 
 	public static Matrix getData(String s) {
