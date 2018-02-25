@@ -17,7 +17,7 @@ public class BackpropagationTrainer {
 		double loss = 0;
 		for (Matrix[] data : trainingData) {
 			Matrix[] errors = new Matrix[nn.getWeights().length];
-			Matrix outputs = nn.feedfoward(data[0]);
+			Matrix outputs = nn.feedforward(data[0]);
 			Matrix outputErrors = data[1].subtract(outputs);
 			errors[errors.length - 1] = outputErrors;
 			for (int i = errors.length - 2; i >= 0; i--) {
@@ -40,7 +40,7 @@ public class BackpropagationTrainer {
 		double validationLoss = 0;
 		for (Matrix[] data : validationData) {
 			Matrix[] errors = new Matrix[nn.getWeights().length];
-			Matrix outputs = nn.feedfoward(data[0]);
+			Matrix outputs = nn.feedforward(data[0]);
 			Matrix outputErrors = data[1].subtract(outputs);
 			errors[errors.length - 1] = outputErrors;
 

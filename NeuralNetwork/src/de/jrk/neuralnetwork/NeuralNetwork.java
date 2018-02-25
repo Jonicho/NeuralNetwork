@@ -26,7 +26,7 @@ public class NeuralNetwork {
 		}
 	}
 
-	public Matrix feedfoward(Matrix inputs) {
+	public Matrix feedforward(Matrix inputs) {
 		for (int a = 0; a < activations.length; a++) {
 			activations[a] = weights[a].multiply(a == 0 ? inputs : activations[a - 1]).add(biases[a])
 					.map((x, i, j) -> sigmoid(x));

@@ -39,7 +39,7 @@ public class Test {
 		}
 		System.out.println("Final loss: " + bpt.getLoss() + " Final V. loss: " + bpt.getValidationLoss());
 		for (int k = 0; k < trainingData.length; k++) {
-			Matrix m = nn.feedfoward(trainingData[k][0]).transpose();
+			Matrix m = nn.feedforward(trainingData[k][0]).transpose();
 
 			String result = "";
 			for (int i = 0; i < m.getRows(); i++) {
@@ -56,7 +56,7 @@ public class Test {
 			System.out.println(result);
 		}
 		for (int k = 0; k < trainingData.length; k++) {
-			Matrix m = nn.feedfoward(trainingData[k][0]).transpose();
+			Matrix m = nn.feedforward(trainingData[k][0]).transpose();
 
 			String result = "";
 			for (int i = 0; i < m.getRows(); i++) {
