@@ -13,7 +13,7 @@ public class Guesser {
 	public static void main(String[] args) {
 		if (args == null || args.length < 1) {
 			System.out.println("error");
-			System.exit(0);
+			return;
 		}
 		String name = args[0];
 		NeuralNetwork nn = null;

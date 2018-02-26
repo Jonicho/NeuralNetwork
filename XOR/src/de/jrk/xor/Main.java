@@ -6,8 +6,8 @@ import de.jrk.neuralnetwork.training.BackpropagationTrainer;
 import processing.core.PApplet;
 
 public class Main extends PApplet {
-	NeuralNetwork nn;
-	BackpropagationTrainer bpt;
+	private NeuralNetwork nn;
+	private BackpropagationTrainer bpt;
 
 	public static void main(String[] args) {
 		PApplet.main("de.jrk.xor.Main");
