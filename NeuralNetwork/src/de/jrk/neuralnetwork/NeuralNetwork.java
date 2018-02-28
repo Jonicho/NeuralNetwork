@@ -45,6 +45,26 @@ public class NeuralNetwork {
 	public Matrix[] getActivations() {
 		return activations;
 	}
+	
+	public NeuralNetwork getCopy() {
+		return (NeuralNetwork) clone();
+	}
+	
+	@Override
+	protected Object clone() {
+		int[] neurons = new int[getWeights().length + 1];
+		NeuralNetwork nn = new NeuralNetwork(neurons);
+		for (int i = 0; i < getWeights().length; i++) {
+			nn.getWeights()[i] = getWeights()[i].getCopy();
+		}
+		for (int i = 0; i < getBiases().length; i++) {
+			nn.getBiases()[i] = getBiases()[i].getCopy();
+		}
+		for (int i = 0; i < getActivations().length; i++) {
+			nn.getActivations()[i] = getActivations()[i] == null ? null : getActivations()[i].getCopy();
+		}
+		return nn;
+	}
 
 	public static double sigmoid(double x) {
 		return 1 / (1 + Math.exp(-x));
