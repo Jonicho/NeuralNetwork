@@ -98,6 +98,25 @@ public class Matrix {
 		return Arrays.deepToString(data);
 	}
 
+	@Override
+	public boolean equals(Object object) {
+		if (object == null || !(object instanceof Matrix)) {
+			return false;
+		}
+		Matrix matrix = (Matrix) object;
+		if (getRows() != matrix.getRows() || getCols() != matrix.getCols()) {
+			return false;
+		}
+		for (int i = 0; i < matrix.getRows(); i++) {
+			for (int j = 0; j < matrix.getCols(); j++) {
+				if (matrix.get(i, j) != get(i, j)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	public static Matrix from2DArray(double... array) {
 		return new Matrix(array.length, 1).map((x, i, j) -> array[i]);
 	}
