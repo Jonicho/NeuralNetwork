@@ -2,6 +2,7 @@ package de.jrk.neuralnetwork.training;
 
 import java.util.ArrayList;
 
+import de.jrk.neuralnetwork.ActivationFunction;
 import de.jrk.neuralnetwork.Matrix;
 import de.jrk.neuralnetwork.NeuralNetwork;
 
@@ -54,6 +55,9 @@ public class BackpropagationTrainer {
 	}
 
 	public BackpropagationTrainer(NeuralNetwork nn) {
+		if (!nn.getActivationFunction().equals(ActivationFunction.SIGMOID)) {
+			throw new IllegalArgumentException("Only networks with Sigmoid activation function can be trained!");
+		}
 		this.nn = nn;
 	}
 

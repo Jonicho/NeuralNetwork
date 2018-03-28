@@ -8,28 +8,34 @@ public class NeuralNetwork {
 	private final Matrix[] weights;
 	private final Matrix[] biases;
 	private final Matrix[] activations;
-
+	private final String activationFunction;
+	
 	public NeuralNetwork(int... neurons) {
+		this(ActivationFunction.SOFTSIGN_NORM, neurons);
+	}
+
+	public NeuralNetwork(String activationFunction, int... neurons) {
 		weights = new Matrix[neurons.length - 1];
 		biases = new Matrix[neurons.length - 1];
 		activations = new Matrix[neurons.length - 1];
+		this.activationFunction = activationFunction;
 		for (int i = 1; i < neurons.length; i++) {
 			weights[i - 1] = new Matrix(neurons[i], neurons[i - 1]);
 			biases[i - 1] = new Matrix(neurons[i], 1);
 		}
 	}
 
-	public void randomize() {
+	public void randomize(double range) {
 		for (int l = 0; l < weights.length; l++) {
-			weights[l] = weights[l].map((x, i, j) -> Math.random() * 2 - 1);
-			biases[l] = biases[l].map((x, i, j) -> Math.random() * 2 - 1);
+			weights[l] = weights[l].map((x, i, j) -> Math.random() * 2 * range - range);
+			biases[l] = biases[l].map((x, i, j) -> Math.random() * 2 * range - range);
 		}
 	}
 
 	public Matrix feedforward(Matrix inputs) {
 		for (int a = 0; a < activations.length; a++) {
 			activations[a] = weights[a].multiply(a == 0 ? inputs : activations[a - 1]).add(biases[a])
-					.map((x, i, j) -> sigmoid(x));
+					.map((x, i, j) -> ActivationFunction.function(activationFunction, x));
 		}
 		return activations[activations.length - 1].getCopy();
 	}
@@ -44,6 +50,10 @@ public class NeuralNetwork {
 
 	public Matrix[] getActivations() {
 		return activations;
+	}
+	
+	public String getActivationFunction() {
+		return activationFunction;
 	}
 	
 	public NeuralNetwork getCopy() {
@@ -66,13 +76,9 @@ public class NeuralNetwork {
 		return nn;
 	}
 
-	public static double sigmoid(double x) {
-		return 1 / (1 + Math.exp(-x));
-	}
-
 	@Override
 	public String toString() {
-		String result = "";
+		String result = activationFunction + ":";
 		for (int i = 0; i < weights.length; i++) {
 			result += "{" + weights[i] + ";" + biases[i] + "}";
 		}
@@ -80,6 +86,8 @@ public class NeuralNetwork {
 	}
 
 	public static NeuralNetwork fromString(String string) {
+		String activationFunction = string.split(":")[0];
+		string = string.split(":")[1];
 		ArrayList<Matrix> weights = new ArrayList<Matrix>();
 		ArrayList<Matrix> biases = new ArrayList<Matrix>();
 		Pattern pattern = Pattern.compile("\\{([^\\{\\}]*)\\}");
@@ -94,7 +102,7 @@ public class NeuralNetwork {
 		for (int i = 1; i < neurons.length; i++) {
 			neurons[i] = weights.get(i - 1).getRows();
 		}
-		NeuralNetwork result = new NeuralNetwork(neurons);
+		NeuralNetwork result = new NeuralNetwork(activationFunction, neurons);
 		for (int i = 0; i < weights.size(); i++) {
 			result.getWeights()[i] = weights.get(i);
 			result.getBiases()[i] = biases.get(i);
