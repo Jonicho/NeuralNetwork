@@ -8,13 +8,13 @@ public class NeuralNetwork {
 	private final Matrix[] weights;
 	private final Matrix[] biases;
 	private final Matrix[] activations;
-	private final String activationFunction;
-	
+	private final ActivationFunction activationFunction;
+
 	public NeuralNetwork(int... neurons) {
-		this(ActivationFunction.SOFTSIGN_NORM, neurons);
+		this(ActivationFunction.getActivationFunction(ActivationFunction.SIGMOID), neurons);
 	}
 
-	public NeuralNetwork(String activationFunction, int... neurons) {
+	public NeuralNetwork(ActivationFunction activationFunction, int... neurons) {
 		weights = new Matrix[neurons.length - 1];
 		biases = new Matrix[neurons.length - 1];
 		activations = new Matrix[neurons.length - 1];
@@ -35,7 +35,7 @@ public class NeuralNetwork {
 	public Matrix feedforward(Matrix inputs) {
 		for (int a = 0; a < activations.length; a++) {
 			activations[a] = weights[a].multiply(a == 0 ? inputs : activations[a - 1]).add(biases[a])
-					.map((x, i, j) -> ActivationFunction.function(activationFunction, x));
+					.map((x, i, j) -> activationFunction.function(x));
 		}
 		return activations[activations.length - 1].getCopy();
 	}
@@ -51,15 +51,15 @@ public class NeuralNetwork {
 	public Matrix[] getActivations() {
 		return activations;
 	}
-	
-	public String getActivationFunction() {
+
+	public ActivationFunction getActivationFunction() {
 		return activationFunction;
 	}
-	
+
 	public NeuralNetwork getCopy() {
 		return (NeuralNetwork) clone();
 	}
-	
+
 	@Override
 	protected Object clone() {
 		int[] neurons = new int[getWeights().length + 1];
@@ -102,7 +102,7 @@ public class NeuralNetwork {
 		for (int i = 1; i < neurons.length; i++) {
 			neurons[i] = weights.get(i - 1).getRows();
 		}
-		NeuralNetwork result = new NeuralNetwork(activationFunction, neurons);
+		NeuralNetwork result = new NeuralNetwork(ActivationFunction.getActivationFunction(activationFunction), neurons);
 		for (int i = 0; i < weights.size(); i++) {
 			result.getWeights()[i] = weights.get(i);
 			result.getBiases()[i] = biases.get(i);
