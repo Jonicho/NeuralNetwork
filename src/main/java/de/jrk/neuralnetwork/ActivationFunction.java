@@ -28,6 +28,11 @@ public abstract class ActivationFunction {
 		return "Activation function \"" + name + "\"";
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof ActivationFunction && ((ActivationFunction) obj).name.equals(name);
+	}
+
 	public static final String IDENTITY = "identity", BINARY_STEP = "binary_step", SIGMOID = "sigmoid", TANH = "tanh",
 			ARCTAN = "arctan", SOFTSIGN = "softsign", SOFTSIGN_NORM = "softsign_norm",
 			INVERSE_SQUARE_ROOT_UNIT = "inverse_square_root_unit", RECTIFIED_LINEAR_UNIT = "rectified_linear_unit",
