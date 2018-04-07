@@ -4,7 +4,7 @@ public abstract class ActivationFunction {
 	private final String name;
 	private final boolean derivativeWithFunction;
 
-	private ActivationFunction(String name, boolean derivativeWithFunction) {
+	public ActivationFunction(String name, boolean derivativeWithFunction) {
 		this.name = name;
 		this.derivativeWithFunction = derivativeWithFunction;
 	}
