@@ -25,11 +25,9 @@ public class BackpropagationTrainer {
 			}
 			for (int w = 0; w < nn.getWeights().length; w++) {
 				Matrix delta = errors[w].scale(learningRate);
-				delta = delta.multiplyEntrywise(
-						(nn.getActivationFunction().isDerivativeWithFunction() ? nn.getActivations()[w]
-								: nn.getWeights()[w].multiply(w == 0 ? data[0] : nn.getActivations()[w - 1])
-										.add(nn.getBiases()[w]))
-												.map((x, i, j) -> nn.getActivationFunction().derivative(x)));
+				delta = delta
+						.multiplyEntrywise((nn.getActivationFunction().isDerivativeWithFunction() ? nn.getActivations()
+								: nn.getNetInputs())[w].map((x, i, j) -> nn.getActivationFunction().derivative(x)));
 				Matrix deltaWeights = delta.multiply((w == 0 ? data[0] : nn.getActivations()[w - 1]).transpose());
 				nn.getWeights()[w] = nn.getWeights()[w].add(deltaWeights);
 				nn.getBiases()[w] = nn.getBiases()[w].add(delta);

@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 public class NeuralNetwork {
 	private final Matrix[] weights;
 	private final Matrix[] biases;
+	private final Matrix[] netInputs;
 	private final Matrix[] activations;
 	private final ActivationFunction activationFunction;
 
@@ -17,6 +18,7 @@ public class NeuralNetwork {
 	public NeuralNetwork(ActivationFunction activationFunction, int... neurons) {
 		weights = new Matrix[neurons.length - 1];
 		biases = new Matrix[neurons.length - 1];
+		netInputs = new Matrix[neurons.length - 1];
 		activations = new Matrix[neurons.length - 1];
 		this.activationFunction = activationFunction;
 		for (int i = 1; i < neurons.length; i++) {
@@ -34,8 +36,8 @@ public class NeuralNetwork {
 
 	public Matrix feedforward(Matrix inputs) {
 		for (int a = 0; a < activations.length; a++) {
-			activations[a] = weights[a].multiply(a == 0 ? inputs : activations[a - 1]).add(biases[a])
-					.map((x, i, j) -> activationFunction.function(x));
+			netInputs[a] = weights[a].multiply(a == 0 ? inputs : activations[a - 1]).add(biases[a]);
+			activations[a] = netInputs[a].map((x, i, j) -> activationFunction.function(x));
 		}
 		return activations[activations.length - 1].getCopy();
 	}
@@ -46,6 +48,10 @@ public class NeuralNetwork {
 
 	public Matrix[] getBiases() {
 		return biases;
+	}
+
+	public Matrix[] getNetInputs() {
+		return netInputs;
 	}
 
 	public Matrix[] getActivations() {
