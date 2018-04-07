@@ -2,6 +2,7 @@ package de.jrk.neuralnetwork.training;
 
 import java.util.ArrayList;
 
+import de.jrk.neuralnetwork.ActivationFunction;
 import de.jrk.neuralnetwork.Matrix;
 import de.jrk.neuralnetwork.NeuralNetwork;
 
@@ -25,9 +26,10 @@ public class BackpropagationTrainer {
 			}
 			for (int w = 0; w < nn.getWeights().length; w++) {
 				Matrix delta = errors[w].scale(learningRate);
-				delta = delta
-						.multiplyEntrywise((nn.getActivationFunction().isDerivativeWithFunction() ? nn.getActivations()
-								: nn.getNetInputs())[w].map((x, i, j) -> nn.getActivationFunction().derivative(x)));
+				ActivationFunction activationFunction = nn.getActivationFunctions()[w];
+				delta = delta.multiplyEntrywise(
+						(activationFunction.isDerivativeWithFunction() ? nn.getActivations() : nn.getNetInputs())[w]
+								.map((x, i, j) -> activationFunction.derivative(x)));
 				Matrix deltaWeights = delta.multiply((w == 0 ? data[0] : nn.getActivations()[w - 1]).transpose());
 				nn.getWeights()[w] = nn.getWeights()[w].add(deltaWeights);
 				nn.getBiases()[w] = nn.getBiases()[w].add(delta);
