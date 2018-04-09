@@ -1,3 +1,20 @@
-/bin/
-/.gradle/
+## Gradle
+.gradle
 /build/
+gradle-app.setting
+!gradle-wrapper.jar
+
+## Java
+*.class
+*.jar
+# virtual machine crash logs
+hs_err_pid*
+
+## Eclipse
+bin/
+.settings/
+.classpath
+.project
+
+## VisualStudioCode
+.vscode/*
